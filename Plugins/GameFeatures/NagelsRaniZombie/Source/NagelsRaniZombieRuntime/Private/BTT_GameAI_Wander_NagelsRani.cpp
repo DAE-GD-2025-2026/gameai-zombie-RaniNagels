@@ -13,6 +13,9 @@ UBTT_GameAI_Wander_NagelsRani::UBTT_GameAI_Wander_NagelsRani()
 
 EBTNodeResult::Type UBTT_GameAI_Wander_NagelsRani::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
+	if (Super::ExecuteTask(OwnerComp, NodeMemory) != EBTNodeResult::Succeeded)
+		return EBTNodeResult::Failed;
+
 	AAIController* aiController = OwnerComp.GetAIOwner();
 	if (!aiController) return EBTNodeResult::Failed;
 
