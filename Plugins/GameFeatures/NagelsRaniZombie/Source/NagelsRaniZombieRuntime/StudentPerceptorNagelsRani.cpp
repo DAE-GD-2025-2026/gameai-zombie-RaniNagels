@@ -1,21 +1,21 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-#include "StudentPerceptor.h"
+#include "StudentPerceptorNagelsRani.h"
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
-UStudentPerceptor::UStudentPerceptor()
+UStudentPerceptorNagelsRani::UStudentPerceptorNagelsRani()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
-void UStudentPerceptor::BeginPlay()
+void UStudentPerceptorNagelsRani::BeginPlay()
 {
 	Super::BeginPlay();
 	
 	if (auto PerceptionComp = GetOwner()->GetComponentByClass<UAIPerceptionComponent>())
 	{
-		PerceptionComp->OnTargetPerceptionUpdated.AddDynamic(this, &UStudentPerceptor::OnPerceptionUpdated);
+		PerceptionComp->OnTargetPerceptionUpdated.AddDynamic(this, &UStudentPerceptorNagelsRani::OnPerceptionUpdated);
 	}
 
 	APawn* owner = Cast<APawn>(GetOwner());
@@ -24,7 +24,7 @@ void UStudentPerceptor::BeginPlay()
 		GEngine->AddOnScreenDebugMessage(5, 5.f, FColor::Black, FString::Printf(TEXT("controller is valid")));
 }
 
-void UStudentPerceptor::OnPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
+void UStudentPerceptorNagelsRani::OnPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
 	GEngine->AddOnScreenDebugMessage(5, 1.f, FColor::Green, FString::Printf(TEXT("Saw Something!")));
 
@@ -97,7 +97,7 @@ void UStudentPerceptor::OnPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 	//if (!BlackboardComp) return;
 }
 
-void UStudentPerceptor::ChangeAmountOfEnemies(bool substract)
+void UStudentPerceptorNagelsRani::ChangeAmountOfEnemies(bool substract)
 {
 	int currentEnemies = m_pController->GetBlackboardComponent()->GetValueAsInt("AmountOfVisibleEnemies");
 	if (substract)

@@ -8,16 +8,16 @@
 #include "Perception/AISenseConfig_Sight.h"
 #include "Perception/AISenseConfig_Damage.h"
 #include "Perception/AISense_Damage.h"
-#include "StudentPerceptor.generated.h"
+#include "StudentPerceptorNagelsRani.generated.h"
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class NAGELSRANIZOMBIERUNTIME_API UStudentPerceptor : public UActorComponent
+class NAGELSRANIZOMBIERUNTIME_API UStudentPerceptorNagelsRani : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this component's properties
-	UStudentPerceptor();
+	UStudentPerceptorNagelsRani();
 	
 	virtual void BeginPlay() override;
 
