@@ -3,6 +3,10 @@
 #include "StudentPerceptorNagelsRani.h"
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "EnemyList_NagelsRani.h"
+#include "ObservedItemsList_NagelsRani.h"
+#include "../../../../../Source/GameAI_Zombie/Items/BaseItem.h"
+#include "../../../../../Source/GameAI_Zombie/Village/House/House.h"
 
 UStudentPerceptorNagelsRani::UStudentPerceptorNagelsRani()
 {
@@ -40,68 +44,59 @@ void UStudentPerceptorNagelsRani::OnPerceptionUpdated(AActor* Actor, FAIStimulus
 	if (name.Contains("BP_House"))
 	{
 		DebugPrint("House");
+		ObserveItem(Actor, true);
 	}
-	else if (name.Contains("BP_Runner"))
+	else if (name.Contains("BP_Runner")
+		|| name.Contains("BP_Heavy")
+		|| name.Contains("BP_Base"))
 	{
-		DebugPrint("Runner Zombie");
-		if (Stimulus.IsExpired())
-			ChangeAmountOfEnemies(true);
+		DebugPrint("Zombie");
+		if (Stimulus.IsExpired()) // does not get called
+			ChangeAmountOfEnemies(Actor, true);
 		else
-			ChangeAmountOfEnemies(false);
+			ChangeAmountOfEnemies(Actor, false);
 	}
-	else if (name.Contains("BP_Heavy"))
+	else if (name.Contains("BP_Pistol")
+		|| name.Contains("BP_Shotgun")
+		|| name.Contains("BP_Food")
+		|| name.Contains("BP_Garbage")
+		|| name.Contains("BP_Medkit"))
 	{
-		DebugPrint("Heavy Zombie");
-		if (Stimulus.IsExpired())
-			ChangeAmountOfEnemies(true);
-		else
-			ChangeAmountOfEnemies(false);
-	}
-	else if (name.Contains("BP_Base"))
-	{
-		DebugPrint("Base Zombie");
-		if (Stimulus.IsExpired())
-			ChangeAmountOfEnemies(true);
-		else
-			ChangeAmountOfEnemies(false);
-	}
-	else if (name.Contains("BP_Pistol"))
-	{
-		DebugPrint("Pistol");
-	}
-	else if (name.Contains("BP_Food"))
-	{
-		DebugPrint("Food");
-	}
-	else if (name.Contains("BP_Garbage"))
-	{
-		DebugPrint("Garbage");
-	}
-	else if (name.Contains("BP_Medkit"))
-	{
-		DebugPrint("MedKit");
-	}
-	else if (name.Contains("BP_Shotgun"))
-	{
-		DebugPrint("Shotgun");
+		DebugPrint(name);
+		ObserveItem(Actor, false);
 	}
 	else
 	{
 		GEngine->AddOnScreenDebugMessage(5, 5.f, FColor::Green, FString::Printf(TEXT("Successfully Sensed: %s"), *name));
 	}
-
-	//AAIController* AIController = Cast<AAIController>(GetOwner());
-	//if (!AIController) return;
-	//
-	//UBlackboardComponent* BlackboardComp = AIController->GetBlackboardComponent();
-	//if (!BlackboardComp) return;
 }
 
-void UStudentPerceptorNagelsRani::ChangeAmountOfEnemies(bool substract)
+void UStudentPerceptorNagelsRani::ChangeAmountOfEnemies(AActor* Actor, bool substract)
 {
-	int currentEnemies = m_pController->GetBlackboardComponent()->GetValueAsInt("AmountOfVisibleEnemies");
-	if (substract)
-		--currentEnemies;
-	else ++currentEnemies;
-	m_pController->GetBlackboardComponent()->SetValueAsInt("AmountOfVisibleEnemies", currentEnemies);
+	auto blackboardComp = m_pController->GetBlackboardComponent();
+
+	auto enemyList = Cast<UEnemyList_NagelsRani>(blackboardComp->GetValueAsObject("EnemyList"));
+	if (enemyList)
+	{
+		if (substract)
+			enemyList->RemoveEnemy(Actor);
+		else
+			enemyList->AddEnemy(Actor);
+
+	blackboardComp->SetValueAsInt("AmountOfVisibleEnemies", enemyList->GetAmountOfEnemies());
+	}
+}
+
+void UStudentPerceptorNagelsRani::ObserveItem(AActor* actor, bool house)
+{
+	auto blackboardComp = m_pController->GetBlackboardComponent();
+	if (!blackboardComp) return;
+
+	auto itemList = Cast<UObservedItemsList_NagelsRani>(blackboardComp->GetValueAsObject("ObservedItemList"));
+	if (itemList)
+	{
+		if (house)
+			itemList->AddHouse(Cast<AHouse>(actor));
+		else itemList->AddItem(Cast<ABaseItem>(actor));
+	}
 }

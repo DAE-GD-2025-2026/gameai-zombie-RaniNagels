@@ -20,9 +20,6 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Blackboard")
 	struct FBlackboardKeySelector TargetLocationKey;
 
-	UPROPERTY(EditAnywhere, Category = "Blackboard")
-	struct FBlackboardKeySelector SpeedKey;
-
 protected:
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 };

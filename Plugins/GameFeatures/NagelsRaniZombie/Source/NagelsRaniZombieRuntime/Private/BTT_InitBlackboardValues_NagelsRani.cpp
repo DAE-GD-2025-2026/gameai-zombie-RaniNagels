@@ -3,6 +3,8 @@
 
 #include "BTT_InitBlackboardValues_NagelsRani.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "EnemyList_NagelsRani.h"
+#include "ObservedItemsList_NagelsRani.h"
 
 UBTT_InitBlackboardValues_NagelsRani::UBTT_InitBlackboardValues_NagelsRani()
 {
@@ -23,5 +25,7 @@ EBTNodeResult::Type UBTT_InitBlackboardValues_NagelsRani::ExecuteTask(UBehaviorT
 
 	blackboardComp->SetValueAsVector(TargetLocationKey.SelectedKeyName, ownerLocation);
 	blackboardComp->SetValueAsBool(IsInitialized.SelectedKeyName, true);
+	blackboardComp->SetValueAsObject(EnemyList.SelectedKeyName, NewObject<UEnemyList_NagelsRani>());
+	blackboardComp->SetValueAsObject(ObservedItemList.SelectedKeyName, NewObject<UObservedItemsList_NagelsRani>());
 	return EBTNodeResult::Succeeded;
 }

@@ -18,7 +18,10 @@ public:
 	UBTD_GameAI_CanSeeEnemie_NagelsRani();
 
 	UPROPERTY(EditAnywhere, Category = "Blackboard")
-	struct FBlackboardKeySelector EnemyVisibleKey;
+	struct FBlackboardKeySelector EnemyList;
+
+	UPROPERTY(EditAnywhere, Category = "Values")
+	float Range = 500.f;
 
 protected:
 	virtual bool CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const override;

@@ -25,6 +25,7 @@ public:
 	virtual void OnPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
 
 private:
-	void ChangeAmountOfEnemies(bool substract);
+	void ChangeAmountOfEnemies(AActor* Actor, bool substract);
+	void ObserveItem(AActor* actor, bool house);
 	AAIController* m_pController = nullptr;
 };
