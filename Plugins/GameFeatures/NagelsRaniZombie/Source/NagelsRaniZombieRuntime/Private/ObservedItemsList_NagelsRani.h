@@ -31,11 +31,13 @@ public:
 	AHouse* GetClosestHouse(const FVector& Location);
 	void CheckHouse(AHouse* House);
 
+	void Tick(float deltaTime);
+
 private:
 	TArray<ABaseItem*> ObservedItems;
 	TArray<AHouse*> ObservedHouses;
 	// bool paired with counter for that bool
-	TArray<TPair<bool, int>> CheckedHousesWithCounter; // resets every 60 seconds
+	TArray<TPair<bool, float>> CheckedHousesWithCounter; // resets every 60 seconds
 	float WorldTimeAtLastCheck = 0.0f;
 	float TimeSinceLastCheck = 0.0f;
 };

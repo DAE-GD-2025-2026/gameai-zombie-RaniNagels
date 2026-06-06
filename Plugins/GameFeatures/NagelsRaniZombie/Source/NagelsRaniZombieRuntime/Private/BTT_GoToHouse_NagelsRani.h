@@ -4,22 +4,30 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTTaskNode.h"
-#include "BehaviorTree/BlackboardComponent.h"
-#include "BTT_GameAI_Seek_NagelsRani.generated.h"
+#include "BTT_GoToHouse_NagelsRani.generated.h"
 
 /**
- * 
+ * a very specific Seek to go to the closest house
  */
 UCLASS()
-class UBTT_GameAI_Seek_NagelsRani : public UBTTaskNode
+class UBTT_GoToHouse_NagelsRani : public UBTTaskNode
 {
 	GENERATED_BODY()
-
+	
 public:
-	UBTT_GameAI_Seek_NagelsRani();
+	UBTT_GoToHouse_NagelsRani();
+
+	UPROPERTY(EditAnywhere, Category = "Blackboard")
+	struct FBlackboardKeySelector CurrentHouseKey;
+
+	UPROPERTY(EditAnywhere, Category = "Blackboard")
+	struct FBlackboardKeySelector ObservedItemsListKey;
 
 	UPROPERTY(EditAnywhere, Category = "Blackboard")
 	struct FBlackboardKeySelector TargetLocationKey;
+
+	UPROPERTY(EditAnywhere, Category = "Blackboard")
+	struct FBlackboardKeySelector AllowedToWanderKey;
 
 protected:
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;

@@ -4,24 +4,25 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTTaskNode.h"
-#include "BehaviorTree/BlackboardComponent.h"
-#include "BTT_GameAI_Seek_NagelsRani.generated.h"
+#include "BTT_CollectItem_NagelsRani.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class UBTT_GameAI_Seek_NagelsRani : public UBTTaskNode
+class UBTT_CollectItem_NagelsRani : public UBTTaskNode
 {
 	GENERATED_BODY()
-
+	
 public:
-	UBTT_GameAI_Seek_NagelsRani();
+	UBTT_CollectItem_NagelsRani();
 
 	UPROPERTY(EditAnywhere, Category = "Blackboard")
-	struct FBlackboardKeySelector TargetLocationKey;
+	struct FBlackboardKeySelector TargetItemKey;
+
+	UPROPERTY(EditAnywhere, Category = "Blackboard")
+	struct FBlackboardKeySelector ObservedItemsListKey;
 
 protected:
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
-	virtual void TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
 };

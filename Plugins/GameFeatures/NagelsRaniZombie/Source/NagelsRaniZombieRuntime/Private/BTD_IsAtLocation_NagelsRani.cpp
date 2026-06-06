@@ -25,6 +25,8 @@ bool UBTD_IsAtLocation_NagelsRani::CalculateRawConditionValue(UBehaviorTreeCompo
 	APawn* controllerPawn = aiController->GetPawn();
 	if (!controllerPawn) return EBTNodeResult::Failed;
 
+	if (!BlackboardComp->IsVectorValueSet(LocationKey.SelectedKeyName)) return true;
+
 	FVector Location = BlackboardComp->GetValueAsVector(LocationKey.SelectedKeyName);
 	FVector ActorLocation = controllerPawn->GetActorLocation();
 

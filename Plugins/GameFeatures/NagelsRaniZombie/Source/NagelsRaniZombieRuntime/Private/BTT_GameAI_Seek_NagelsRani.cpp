@@ -2,12 +2,14 @@
 
 
 #include "BTT_GameAI_Seek_NagelsRani.h"
-#include "BehaviorTree/BlackboardComponent.h"
 #include "AIController.h"
+#include "BehaviorTree/BlackboardComponent.h"
+#include "Navigation/PathFollowingComponent.h"
 
 UBTT_GameAI_Seek_NagelsRani::UBTT_GameAI_Seek_NagelsRani()
 {
 	NodeName = TEXT("Seek");
+	bNotifyTick = true;
 }
 
 EBTNodeResult::Type UBTT_GameAI_Seek_NagelsRani::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
@@ -22,7 +24,27 @@ EBTNodeResult::Type UBTT_GameAI_Seek_NagelsRani::ExecuteTask(UBehaviorTreeCompon
 	if (!aiController) return EBTNodeResult::Failed;
 
 	auto targetLocation = blackboardComp->GetValueAsVector(TargetLocationKey.SelectedKeyName);
-	aiController->MoveToLocation(targetLocation, -1.f, true, true, false, true, 0, true);
+	EPathFollowingRequestResult::Type Result = aiController->MoveToLocation(targetLocation);
 
-	return EBTNodeResult::Succeeded;
+	if (Result == EPathFollowingRequestResult::Failed)
+		return EBTNodeResult::Failed;
+
+	return EBTNodeResult::InProgress;
+}
+
+void UBTT_GameAI_Seek_NagelsRani::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
+{
+	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
+
+	auto AIController = OwnerComp.GetAIOwner();
+	if (!AIController)
+	{
+		FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
+		return;
+	}
+
+	if (AIController->GetMoveStatus() == EPathFollowingStatus::Idle)
+	{
+		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+	}
 }

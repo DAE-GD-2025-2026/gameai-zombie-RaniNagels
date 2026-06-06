@@ -59,24 +59,6 @@ void UObservedItemsList_NagelsRani::AddHouse(AHouse* House)
 
 AHouse* UObservedItemsList_NagelsRani::GetClosestHouse(const FVector& Location)
 {
-	// this function does not get updated every tick!
-	auto currentTime = GetWorld()->GetTimeSeconds();
-	TimeSinceLastCheck = currentTime - WorldTimeAtLastCheck;
-	WorldTimeAtLastCheck = currentTime;
-
-	for (int i = 0; i < CheckedHousesWithCounter.Num(); i++)
-	{
-		if (CheckedHousesWithCounter[i].Key)
-		{
-			CheckedHousesWithCounter[i].Value -= TimeSinceLastCheck;
-			if (CheckedHousesWithCounter[i].Value <= 0)
-			{
-				CheckedHousesWithCounter[i].Key = false;
-				CheckedHousesWithCounter[i].Value = 0;
-			}
-		}
-	}
-
 	AHouse* closestHouse = nullptr;
 	float closestDistance = TNumericLimits<float>::Max();
 
@@ -105,6 +87,17 @@ void UObservedItemsList_NagelsRani::CheckHouse(AHouse* House)
 		{
 			CheckedHousesWithCounter[index].Key = true;
 			CheckedHousesWithCounter[index].Value = 60; // reset counter to 60 seconds
+		}
+	}
+}
+
+void UObservedItemsList_NagelsRani::Tick(float deltaTime)
+{
+	for (auto& houseCounter : CheckedHousesWithCounter)
+	{
+		if (houseCounter.Key)
+		{
+			houseCounter.Value -= deltaTime;
 		}
 	}
 }

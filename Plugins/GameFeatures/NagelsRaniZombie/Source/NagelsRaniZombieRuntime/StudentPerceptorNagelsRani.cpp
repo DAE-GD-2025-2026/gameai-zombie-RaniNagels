@@ -24,8 +24,31 @@ void UStudentPerceptorNagelsRani::BeginPlay()
 
 	APawn* owner = Cast<APawn>(GetOwner());
 	m_pController = Cast<AAIController>(owner->GetController());
-	if (m_pController->GetBlackboardComponent())
+	auto blackboardComp = m_pController->GetBlackboardComponent();
+	if (blackboardComp)
 		GEngine->AddOnScreenDebugMessage(5, 5.f, FColor::Black, FString::Printf(TEXT("controller is valid")));
+
+	ObservedItemsList = NewObject<UObservedItemsList_NagelsRani>(this);
+	EnemyList = NewObject<UEnemyList_NagelsRani>(this);
+	blackboardComp->SetValueAsObject(TEXT("ObservedItemList"), ObservedItemsList);
+	blackboardComp->SetValueAsObject(TEXT("EnemyList"), EnemyList);
+}
+
+void UStudentPerceptorNagelsRani::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	if (m_pController)
+	{
+		if (auto Blackboard = m_pController->GetBlackboardComponent())
+		{
+			Blackboard->ClearValue(TEXT("ObservedItemList"));
+			Blackboard->ClearValue(TEXT("EnemyList"));
+		}
+	}
+
+	ObservedItemsList = nullptr;
+	EnemyList = nullptr;
+
+	Super::EndPlay(EndPlayReason);
 }
 
 void UStudentPerceptorNagelsRani::OnPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
@@ -71,6 +94,12 @@ void UStudentPerceptorNagelsRani::OnPerceptionUpdated(AActor* Actor, FAIStimulus
 	}
 }
 
+void UStudentPerceptorNagelsRani::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	ObservedItemsList->Tick(DeltaTime);
+}
+
 void UStudentPerceptorNagelsRani::ChangeAmountOfEnemies(AActor* Actor, bool substract)
 {
 	auto blackboardComp = m_pController->GetBlackboardComponent();
@@ -83,7 +112,7 @@ void UStudentPerceptorNagelsRani::ChangeAmountOfEnemies(AActor* Actor, bool subs
 		else
 			enemyList->AddEnemy(Actor);
 
-	blackboardComp->SetValueAsInt("AmountOfVisibleEnemies", enemyList->GetAmountOfEnemies());
+		blackboardComp->SetValueAsInt("AmountOfVisibleEnemies", enemyList->GetAmountOfEnemies());
 	}
 }
 

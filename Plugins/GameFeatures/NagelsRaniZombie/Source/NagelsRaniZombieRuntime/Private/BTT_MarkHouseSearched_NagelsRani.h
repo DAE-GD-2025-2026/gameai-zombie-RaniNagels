@@ -4,35 +4,28 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTTaskNode.h"
-#include "BTT_InitBlackboardValues_NagelsRani.generated.h"
+#include "BTT_MarkHouseSearched_NagelsRani.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class UBTT_InitBlackboardValues_NagelsRani: public UBTTaskNode
+class UBTT_MarkHouseSearched_NagelsRani : public UBTTaskNode
 {
 	GENERATED_BODY()
-	
+
 public:
-	UBTT_InitBlackboardValues_NagelsRani();
-
-	// list all properties that need to be initialized!
-	UPROPERTY(EditAnywhere, Category = "Blackboard")
-	struct FBlackboardKeySelector TargetLocationKey;
+	UBTT_MarkHouseSearched_NagelsRani();
 
 	UPROPERTY(EditAnywhere, Category = "Blackboard")
-	struct FBlackboardKeySelector IsInitialized;
+	struct FBlackboardKeySelector CurrentHouseKey;
+
+	UPROPERTY(EditAnywhere, Category = "Blackboard")
+	struct FBlackboardKeySelector ObservedItemsListKey;
 
 	UPROPERTY(EditAnywhere, Category = "Blackboard")
 	struct FBlackboardKeySelector AllowedToWanderKey;
-
-	//UPROPERTY(EditAnywhere, Category="Blackboard")
-	//struct FBlackboardKeySelector EnemyList;
-	//
-	//UPROPERTY(EditAnywhere, Category="Blackboard")
-	//struct FBlackboardKeySelector ObservedItemList;
-
+	
 protected:
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 };
