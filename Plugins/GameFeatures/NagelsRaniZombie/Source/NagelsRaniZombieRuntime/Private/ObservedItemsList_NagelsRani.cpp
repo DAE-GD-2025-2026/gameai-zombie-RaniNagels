@@ -10,6 +10,10 @@ UObservedItemsList_NagelsRani::UObservedItemsList_NagelsRani()
 {
 }
 
+UObservedItemsList_NagelsRani::~UObservedItemsList_NagelsRani()
+{
+}
+
 ABaseItem* UObservedItemsList_NagelsRani::GetClosestItem(const FVector& Location, EItemType type) const
 {
 	for (auto item : ObservedItems)

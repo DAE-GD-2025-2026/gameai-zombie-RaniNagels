@@ -2,9 +2,16 @@
 
 
 #include "EnemyList_NagelsRani.h"
+#include <UObject/FastReferenceCollector.h>
+#include <Zombies/BaseZombie.h>
+#include <Common/HealthComponent.h>
 
 UEnemyList_NagelsRani::UEnemyList_NagelsRani()
 	: Super()
+{
+}
+
+UEnemyList_NagelsRani::~UEnemyList_NagelsRani()
 {
 }
 
@@ -31,15 +38,23 @@ void UEnemyList_NagelsRani::AddEnemy(AActor* Enemy)
 	if (Enemy && !KnownEnemies.Contains(Enemy))
 	{
 		KnownEnemies.Add(Enemy);
+		
+		if (ABaseZombie* Zombie = Cast<ABaseZombie>(Enemy))
+		{
+			Zombie->OnDestroyed.AddDynamic(this, &UEnemyList_NagelsRani::OnEnemyDied);
+		}
 	}
 }
 
 void UEnemyList_NagelsRani::RemoveEnemy(AActor* Enemy)
 {
-	if (Enemy)
+	if (ABaseZombie* Zombie = Cast<ABaseZombie>(Enemy))
 	{
-		KnownEnemies.Remove(Enemy);
+		Zombie->OnDestroyed.RemoveDynamic(
+			this,
+			&UEnemyList_NagelsRani::OnEnemyDied);
 	}
+	KnownEnemies.Remove(Enemy);
 }
 
 int UEnemyList_NagelsRani::GetAmountOfEnemiesWithinRange(const FVector& Location, float range) const
@@ -63,4 +78,9 @@ int UEnemyList_NagelsRani::GetAmountOfEnemiesWithinRange(const FVector& Location
 	}
 	else
 		return 0;
+}
+
+void UEnemyList_NagelsRani::OnEnemyDied(AActor* DeadEnemy)
+{
+	RemoveEnemy(DeadEnemy);
 }

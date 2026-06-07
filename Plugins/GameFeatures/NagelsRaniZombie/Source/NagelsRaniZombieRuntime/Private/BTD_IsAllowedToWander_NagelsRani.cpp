@@ -18,7 +18,5 @@ bool UBTD_IsAllowedToWander_NagelsRani::CalculateRawConditionValue(UBehaviorTree
 	UBlackboardComponent* BlackboardComp = OwnerComp.GetBlackboardComponent();
 	if (!BlackboardComp) return false;
 
-	//if (BlackboardComp->Clear)
-
 	return BlackboardComp->GetValueAsBool(IsAllowedToWanderKey.SelectedKeyName);
 }

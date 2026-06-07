@@ -56,24 +56,29 @@ void UStudentPerceptorNagelsRani::OnPerceptionUpdated(AActor* Actor, FAIStimulus
 	GEngine->AddOnScreenDebugMessage(5, 1.f, FColor::Green, FString::Printf(TEXT("Saw Something!")));
 
 	if (!Stimulus.IsValid()) return;
+	if (!IsValid(Actor))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Invalid Actor"));
+		return;
+	}
 
 	// debug print lambda
-	auto DebugPrint = [](const FString& type)
-		{
-			GEngine->AddOnScreenDebugMessage(5, 5.f, FColor::Emerald, FString::Printf(TEXT("I Saw a %s!"), *type));
-		};
+	//auto DebugPrint = [](const FString& type)
+	//	{
+	//		GEngine->AddOnScreenDebugMessage(5, 5.f, FColor::Emerald, FString::Printf(TEXT("I Saw a %s!"), *type));
+	//	};
 	
 	auto name = Actor->GetName();
 	if (name.Contains("BP_House"))
 	{
-		DebugPrint("House");
+		//DebugPrint("House");
 		ObserveItem(Actor, true);
 	}
 	else if (name.Contains("BP_Runner")
 		|| name.Contains("BP_Heavy")
 		|| name.Contains("BP_Base"))
 	{
-		DebugPrint("Zombie");
+		//DebugPrint("Zombie");
 		if (Stimulus.IsExpired()) // does not get called
 			ChangeAmountOfEnemies(Actor, true);
 		else
@@ -85,7 +90,7 @@ void UStudentPerceptorNagelsRani::OnPerceptionUpdated(AActor* Actor, FAIStimulus
 		|| name.Contains("BP_Garbage")
 		|| name.Contains("BP_Medkit"))
 	{
-		DebugPrint(name);
+		//DebugPrint(name);
 		ObserveItem(Actor, false);
 	}
 	else

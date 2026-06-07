@@ -24,12 +24,6 @@ EBTNodeResult::Type UBTT_InitBlackboardValues_NagelsRani::ExecuteTask(UBehaviorT
 	auto ownerLocation = OwnerComp.GetOwner()->GetActorLocation();
 
 	blackboardComp->SetValueAsVector(TargetLocationKey.SelectedKeyName, ownerLocation);
-	//auto enemyList = NewObject<UEnemyList_NagelsRani>();
-	//auto observedItemList = NewObject<UObservedItemsList_NagelsRani>();
-	//if (!enemyList->IsValidLowLevel() || !observedItemList->IsValidLowLevel()) return EBTNodeResult::Failed;
-	//
-	//blackboardComp->SetValueAsObject(EnemyList.SelectedKeyName, enemyList);
-	//blackboardComp->SetValueAsObject(ObservedItemList.SelectedKeyName, observedItemList);
 	blackboardComp->SetValueAsBool(AllowedToWanderKey.SelectedKeyName, true);
 
 	blackboardComp->SetValueAsBool(IsInitialized.SelectedKeyName, true);

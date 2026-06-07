@@ -16,6 +16,7 @@ class UEnemyList_NagelsRani : public UObject
 	
 public:
 	UEnemyList_NagelsRani();
+	virtual ~UEnemyList_NagelsRani();
 
 	AActor* GetClosestEnemy(const FVector& Location) const;
 	void AddEnemy(AActor* Enemy);
@@ -24,5 +25,9 @@ public:
 	int GetAmountOfEnemiesWithinRange(const FVector& Location, float range) const;
 
 private:
-	TArray<AActor*> KnownEnemies;
+	UFUNCTION()
+	void OnEnemyDied(AActor* DeadEnemy);
+
+	UPROPERTY()
+	TArray<TObjectPtr<AActor>> KnownEnemies;
 };

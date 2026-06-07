@@ -21,6 +21,7 @@ class UObservedItemsList_NagelsRani : public UObject
 	
 public:
 	UObservedItemsList_NagelsRani();
+	virtual ~UObservedItemsList_NagelsRani();
 
 	ABaseItem* GetClosestItem(const FVector& Location, EItemType type) const;
 	void AddItem(ABaseItem* Item);
@@ -34,8 +35,10 @@ public:
 	void Tick(float deltaTime);
 
 private:
-	TArray<ABaseItem*> ObservedItems;
-	TArray<AHouse*> ObservedHouses;
+	UPROPERTY()
+	TArray<TObjectPtr<ABaseItem>> ObservedItems;
+	UPROPERTY()
+	TArray<TObjectPtr<AHouse>> ObservedHouses;
 	// bool paired with counter for that bool
 	TArray<TPair<bool, float>> CheckedHousesWithCounter; // resets every 60 seconds
 	float WorldTimeAtLastCheck = 0.0f;

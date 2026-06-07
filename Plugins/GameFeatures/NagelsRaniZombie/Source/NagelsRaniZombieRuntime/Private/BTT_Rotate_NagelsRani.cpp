@@ -4,7 +4,6 @@
 #include "BTT_Rotate_NagelsRani.h"
 #include "AIController.h"
 
-
 UBTT_Rotate_NagelsRani::UBTT_Rotate_NagelsRani()
 {
 	NodeName = TEXT("Rotate");

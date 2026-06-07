@@ -6,6 +6,7 @@
 #include "ObservedItemsList_NagelsRani.h"
 #include <Items/BaseItem.h>
 #include <Common/InventoryComponent.h>
+#include "AIController.h"
 
 UBTT_CollectItem_NagelsRani::UBTT_CollectItem_NagelsRani()
 {
@@ -32,8 +33,22 @@ EBTNodeResult::Type UBTT_CollectItem_NagelsRani::ExecuteTask(UBehaviorTreeCompon
 	auto targetItemCasted = Cast<ABaseItem>(targetItem);
 	if (!targetItemCasted) return EBTNodeResult::Failed;
 
+	if (targetItemCasted->GetValue() == 0)
+	{
+		targetItemCasted->Destroy();
+		observedItemsListCasted->RemoveItem(targetItemCasted);
+		blackboardComp->ClearValue(TargetItemKey.SelectedKeyName);
+		return EBTNodeResult::Succeeded;
+	}
+
 	// get inventory component
-	auto inventoryComp = OwnerComp.GetOwner()->FindComponentByClass<UInventoryComponent>();
+	auto aiController = OwnerComp.GetAIOwner();
+	if (!aiController) return EBTNodeResult::Failed;
+
+	auto targetActor = aiController->GetPawn();
+	if (!targetActor) return EBTNodeResult::Failed;
+
+	auto inventoryComp = targetActor->FindComponentByClass<UInventoryComponent>();
 	if (!inventoryComp) return EBTNodeResult::Failed;
 
 	// find first empty slot
@@ -43,6 +58,7 @@ EBTNodeResult::Type UBTT_CollectItem_NagelsRani::ExecuteTask(UBehaviorTreeCompon
 		if (!slot)
 		{
 			inventoryComp->GrabItem(index, targetItemCasted);
+			observedItemsListCasted->RemoveItem(targetItemCasted);
 			break;
 		}
 		index++;
